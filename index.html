@@ -164,4 +164,14 @@ function backup(){download('ARAM-cloud-backup-'+today()+'.json',JSON.stringify(d
 async function restoreBackup(){if(role!=='owner')return;let f=$('restoreFile').files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(!Array.isArray(obj.items)||!Array.isArray(obj.logs)||!valid(obj.logs,obj.items))throw Error('Invalid stock data');if(!confirm('Replace ALL cloud data? Other devices will be affected.'))return;db={items:obj.items,logs:obj.logs};await commit('Restore')}catch(e){alert(e.message)}}
 function exportCSV(){let rows=[['Date','Type','Item','Quantity','Rate INR','Purchase Total INR','Supplier','Given To','Notes','Recorded By'],...db.logs.map(l=>[l.date,l.type,l.name,l.qty,l.price,l.type==='purchase'?l.qty*l.price:'',l.supplier||'',l.givenTo||'',l.notes||'',l.by||''])];download('ARAM-transactions.csv','\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n'),'text/csv')}
 (async()=>{try{let cfg=window.ARAM_CONFIG;if(!cfg?.url||!cfg?.anonKey){message('Website code ready. Configure Supabase in config.js before publishing.',true);return}sb=supabase.createClient(cfg.url,cfg.anonKey);let r=await fetch('catalog.json');catalog=await r.json();let {data}=await sb.auth.getUser();if(data?.user)await start(data.user)}catch(e){message(e.message,true)}})();
-</script></body></html>
+</script>
+<footer style="
+  text-align:center;
+  padding:18px 10px;
+  color:#64766a;
+  font-size:12px;
+">
+  Designed by
+  <strong>Averixa Technologies</strong>
+</footer>
+</body></html>
